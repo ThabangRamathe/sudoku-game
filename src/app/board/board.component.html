@@ -1,0 +1,32 @@
+
+
+<!-- <table>
+    <tr *ngFor="let line of [].constructor(9); let row = index">
+        <td *ngFor="let v-line of [].constructor(9); let col = index" (click)="handleSquareClick(row, col)">
+            <div *ngIf="board">
+                <div *ngIf="board[row][col] != 0">{{board[row][col]}}
+                </div>
+            </div>
+        </td>
+    </tr>
+</table> -->
+
+<div *ngFor="let row of board; let i = index" class="row">
+    <div *ngFor="let cell of row; let j = index" class="cell" (click)="handleClick(cellValue, i, j)" [ngClass]="{'error': isError(i,j),'correct': isCorrect(i,j), 'selected': cell == selectedValue}">
+        <span *ngIf="cell != 0">{{cell}}</span>
+    </div>
+</div>
+
+<div>
+    <form>
+        <label for="cellValue">Enter number: </label>
+        <input type="number" id="cellValue" #cellValue min="1" max="9" name="cellValue">
+        <button (click)="onSubmit(cellValue)">submit</button>
+    </form>
+</div>
+
+<button (click)="goToMenu()">New Game</button>
+
+<div>
+    <span *ngIf="checkWin()">Win!</span>
+</div>

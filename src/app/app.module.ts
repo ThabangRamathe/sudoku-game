@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuComponent } from './menu/menu.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BoardComponent,
-    MenuComponent
+    MenuComponent,
+    HeaderComponent
   ],
   imports: [
     FormsModule,
@@ -23,3 +25,4 @@ import { MenuComponent } from './menu/menu.component';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

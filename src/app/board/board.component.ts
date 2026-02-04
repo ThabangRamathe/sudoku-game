@@ -43,32 +43,20 @@ export class BoardComponent implements OnInit {
     generator.gen();
     generator.reduce(reductions[0]);
     generator.reduce(reductions[1]);
-    
+
     this.board = generator.board;
 
   }
 
   handleSquareClick(row: number, col: number){}
 
-  handleClick(event:any, row:number, col: number){
+  handleClick(row:number, col: number){
     if (this.board[row][col] != 0 && this.isCorrect(row,col)) {
       this.selectedValue = this.board[row][col];
       return;
     }
     this.currentCell = (row * 9) + col;
-    setTimeout(()=> event.focus(), 0);
     this.selectedValue = -1;
-  }
-
-  onSubmit(event: any){
-    let answer = Number(event.value)
-    if (answer >= 0 && answer<10) {
-      let row = Math.floor(this.currentCell/9);
-      let col = this.currentCell%9;
-      this.board[row][col] = Number(event.value);
-      setTimeout(()=> event.focus(), 0);
-      this.currentCell = -1;
-    }
   }
 
   checkWin(){
@@ -83,7 +71,7 @@ export class BoardComponent implements OnInit {
 
   isError(row:number, col:number){
     if(this.board[row][col] == 0) return false;
-    
+
     if(this.board[row][col] != this.solvedBoard[row][col]) return true;
 
     return false;
@@ -91,7 +79,7 @@ export class BoardComponent implements OnInit {
 
   isCorrect(row:number, col:number){
     if(this.board[row][col] == 0) return false;
-    
+
     if(this.board[row][col] == this.solvedBoard[row][col]) return true;
 
     return false;
@@ -99,6 +87,83 @@ export class BoardComponent implements OnInit {
 
   goToMenu(){
     this.router.navigate(['/home'])
+  }
+
+  // New input methods
+  isActiveCell(row: number, col: number): boolean {
+    return this.currentCell === (row * 9) + col;
+  }
+
+  getCurrentRow(): number {
+    return Math.floor(this.currentCell / 9);
+  }
+
+  getCurrentCol(): number {
+    return this.currentCell % 9;
+  }
+
+  onNumberClick(num: number): void {
+    if (this.currentCell === -1) return;
+
+    let row = this.getCurrentRow();
+    let col = this.getCurrentCol();
+
+    // Don't allow editing cells that were part of the original puzzle
+    if (this.board[row][col] !== 0 && this.isCorrect(row, col)) {
+      return;
+    }
+
+    this.board[row][col] = num;
+    // Trigger change detection
+    this.board = [...this.board];
+  }
+
+  onClear(): void {
+    if (this.currentCell === -1) return;
+
+    let row = this.getCurrentRow();
+    let col = this.getCurrentCol();
+
+    // Don't allow clearing cells that were part of the original puzzle
+    if (this.board[row][col] !== 0 && this.isCorrect(row, col)) {
+      return;
+    }
+
+    this.board[row][col] = 0;
+    // Trigger change detection
+    this.board = [...this.board];
+  }
+
+  onKeyDown(event: any, input: any): void {
+    const key = event.key;
+
+    // Handle Enter key to submit
+    if (key === 'Enter') {
+      this.onSubmit(input);
+      return;
+    }
+
+    // Handle number keys (1-9)
+    if (key >= '1' && key <= '9') {
+      event.preventDefault();
+      this.onNumberClick(Number(key));
+      input.value = '';
+    }
+
+    // Handle Backspace/Delete
+    if (key === 'Backspace' || key === 'Delete') {
+      event.preventDefault();
+      this.onClear();
+      input.value = '';
+    }
+  }
+
+  onSubmit(event: any): void {
+    let answer = Number(event.value);
+    if (answer >= 1 && answer <= 9) {
+      this.onNumberClick(answer);
+      event.value = '';
+    }
   }
 
 }

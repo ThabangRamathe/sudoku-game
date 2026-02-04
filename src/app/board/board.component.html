@@ -1,32 +1,41 @@
 
 
-<!-- <table>
-    <tr *ngFor="let line of [].constructor(9); let row = index">
-        <td *ngFor="let v-line of [].constructor(9); let col = index" (click)="handleSquareClick(row, col)">
-            <div *ngIf="board">
-                <div *ngIf="board[row][col] != 0">{{board[row][col]}}
+<div class="board-container">
+    <h1 class="board-title">Sudoku Puzzle</h1>
+
+    <div class="board">
+        <div *ngFor="let row of board; let i = index" class="row">
+            <div *ngFor="let cell of row; let j = index"
+                 class="cell"
+                 (click)="handleClick(i, j)"
+                 [ngClass]="{'error': isError(i,j), 'correct': isCorrect(i,j), 'selected': cell == selectedValue, 'active': isActiveCell(i, j)}">
+                <span *ngIf="cell != 0">{{cell}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-section">
+        <div class="input-methods">
+            <!-- Quick Input Buttons -->
+            <div class="number-pad">
+                <h3 class="pad-label">Quick Input</h3>
+                <div class="buttons-grid">
+                    <button *ngFor="let num of [1,2,3,4,5,6,7,8,9]"
+                            type="button"
+                            class="num-btn"
+                            (click)="onNumberClick(num)"
+                            [disabled]="currentCell === -1">
+                        {{num}}
+                    </button>
+                    <button type="button" class="num-btn clear-btn" (click)="onClear()" [disabled]="currentCell === -1">
+                        Clear
+                    </button>
                 </div>
             </div>
-        </td>
-    </tr>
-</table> -->
-
-<div *ngFor="let row of board; let i = index" class="row">
-    <div *ngFor="let cell of row; let j = index" class="cell" (click)="handleClick(cellValue, i, j)" [ngClass]="{'error': isError(i,j),'correct': isCorrect(i,j), 'selected': cell == selectedValue}">
-        <span *ngIf="cell != 0">{{cell}}</span>
+        </div>
     </div>
-</div>
 
-<div>
-    <form>
-        <label for="cellValue">Enter number: </label>
-        <input type="number" id="cellValue" #cellValue min="1" max="9" name="cellValue">
-        <button (click)="onSubmit(cellValue)">submit</button>
-    </form>
-</div>
-
-<button (click)="goToMenu()">New Game</button>
-
-<div>
-    <span *ngIf="checkWin()">Win!</span>
+    <div class="status-message" [ngClass]="{'win': checkWin()}">
+        <span *ngIf="checkWin()">🎉 You Won! 🎉</span>
+    </div>
 </div>
